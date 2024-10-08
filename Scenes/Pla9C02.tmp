@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=3 uid="uid://ca8xqjo881bvp"]
+
+[ext_resource type="Script" path="res://Scripts/Player_Controller.gd" id="1_0673e"]
+[ext_resource type="Texture2D" uid="uid://c4tjrar44xg13" path="res://Assets/Sprites/MC.png" id="2_kb308"]
+[ext_resource type="Script" path="res://Scripts/Flashlight_Controller.gd" id="3_svjaj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vjvj6"]
+atlas = ExtResource("2_kb308")
+region = Rect2(0, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydyic"]
+atlas = ExtResource("2_kb308")
+region = Rect2(0, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kt4n"]
+atlas = ExtResource("2_kb308")
+region = Rect2(18, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k7cbb"]
+atlas = ExtResource("2_kb308")
+region = Rect2(36, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0gjj"]
+atlas = ExtResource("2_kb308")
+region = Rect2(54, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3icxy"]
+atlas = ExtResource("2_kb308")
+region = Rect2(72, 0, 18, 19)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wb6qh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vjvj6")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ydyic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4kt4n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k7cbb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g0gjj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3icxy")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p2tqu"]
+size = Vector2(11, 16)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_0673e")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wb6qh")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.5, 0)
+shape = SubResource("RectangleShape2D_p2tqu")
+
+[node name="Flashlight" type="Area2D" parent="."]
+position = Vector2(5, 2)
+script = ExtResource("3_svjaj")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Flashlight"]
+polygon = PackedVector2Array(0, 0, 50, 20, 50, -20)
+
+[node name="SubViewport" type="SubViewport" parent="Flashlight"]
+
+[connection signal="area_entered" from="Flashlight" to="Flashlight" method="_on_area_entered"]
+[connection signal="area_exited" from="Flashlight" to="Flashlight" method="_on_area_exited"]

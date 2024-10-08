@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bryujoatkbisr"]
+
+[ext_resource type="Script" path="res://Scripts/Victory_Controller.gd" id="1_hsebk"]
+[ext_resource type="Texture2D" uid="uid://chs0lky21pctq" path="res://Assets/Sprites/victory.png" id="1_jmu2v"]
+[ext_resource type="AudioStream" uid="uid://8v5l80t5oj11" path="res://Assets/Music/Car.mp3" id="3_svqk7"]
+[ext_resource type="AudioStream" uid="uid://dgf6qmtqva5op" path="res://Assets/Music/ending.mp3" id="4_taiah"]
+
+[node name="Victory" type="Node2D"]
+script = ExtResource("1_hsebk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(80, 72)
+texture = ExtResource("1_jmu2v")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_svqk7")
+autoplay = true
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_taiah")
+volume_db = -5.0
+
+[connection signal="finished" from="AudioStreamPlayer" to="." method="_on_audio_stream_player_finished"]

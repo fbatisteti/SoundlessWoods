@@ -1,0 +1,634 @@
+[gd_scene load_steps=31 format=3 uid="uid://de8rf27b42bwr"]
+
+[ext_resource type="Script" path="res://Scripts/Game_Controller.gd" id="1_44iru"]
+[ext_resource type="Texture2D" uid="uid://dyx7ystmcseki" path="res://Assets/Sprites/terrorBG.png" id="2_57eay"]
+[ext_resource type="PackedScene" uid="uid://d4dk8xjesqjam" path="res://Scenes/Fog.tscn" id="3_5s324"]
+[ext_resource type="PackedScene" uid="uid://ca8xqjo881bvp" path="res://Scenes/Player.tscn" id="3_77oe7"]
+[ext_resource type="Script" path="res://Scripts/Camera_controller.gd" id="4_qy33o"]
+[ext_resource type="TileSet" uid="uid://drus6kxjadd56" path="res://Assets/tileset.tres" id="5_wgnds"]
+[ext_resource type="Script" path="res://Scripts/HUD_Controller.gd" id="7_h8jw1"]
+[ext_resource type="Texture2D" uid="uid://du46f4jbeayfo" path="res://Assets/Sprites/Objects.png" id="8_h5quk"]
+[ext_resource type="FontFile" uid="uid://wkawo8mlct6j" path="res://Assets/Font/Early GameBoy.ttf" id="9_vqke6"]
+[ext_resource type="PackedScene" uid="uid://bkt0daxsrm57p" path="res://Scenes/McGuffin.tscn" id="10_6a4ts"]
+[ext_resource type="Texture2D" uid="uid://do2lf4edkhapo" path="res://Assets/Sprites/Mask.png" id="10_lyof1"]
+[ext_resource type="PackedScene" uid="uid://dx6ely5phnqx4" path="res://Scenes/Battery.tscn" id="11_8flnu"]
+[ext_resource type="AudioStream" uid="uid://c2upxuprb7cjk" path="res://Assets/Music/music.mp3" id="12_qhb8i"]
+[ext_resource type="AudioStream" uid="uid://ceseovuflqpdm" path="res://Assets/Music/music_heavy.mp3" id="13_51q3f"]
+[ext_resource type="PackedScene" uid="uid://dcpwjgv626mvq" path="res://Scenes/Button_Up.tscn" id="15_umoe2"]
+[ext_resource type="PackedScene" uid="uid://c3euocln0l78q" path="res://Scenes/Teleport.tscn" id="16_uclt2"]
+[ext_resource type="PackedScene" uid="uid://bgbqc4mpwcat5" path="res://Scenes/Monster.tscn" id="17_1lik8"]
+[ext_resource type="Script" path="res://Scripts/Water_death.gd" id="18_hc5l7"]
+[ext_resource type="Texture2D" uid="uid://ejggnld77yt" path="res://Assets/Sprites/water.png" id="19_m16lb"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nld3r"]
+light_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2laxt"]
+atlas = ExtResource("8_h5quk")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iky40"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2laxt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b7pw0"]
+atlas = ExtResource("8_h5quk")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_33ihh"]
+atlas = ExtResource("8_h5quk")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7d8u"]
+atlas = ExtResource("8_h5quk")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ju1xw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b7pw0")
+}],
+"loop": true,
+"name": &"cap",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33ihh")
+}],
+"loop": true,
+"name": &"empty",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7d8u")
+}],
+"loop": true,
+"name": &"full",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7pmwf"]
+size = Vector2(786, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kuh4p"]
+atlas = ExtResource("19_m16lb")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8g4fy"]
+atlas = ExtResource("19_m16lb")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gwo8d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kuh4p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8g4fy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
+
+[node name="Pier" type="Node2D"]
+position = Vector2(0, -1)
+script = ExtResource("1_44iru")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2(0, -1)
+motion_scale = Vector2(0, 0)
+
+[node name="TerrorBg" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(80, 73)
+texture = ExtResource("2_57eay")
+
+[node name="Fog" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_5s324")]
+position = Vector2(77, 103)
+player = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("3_77oe7")]
+position = Vector2(40, 116)
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player")]
+position = Vector2(90, 73)
+limit_left = -690
+limit_top = -20
+limit_right = 180
+limit_bottom = 150
+editor_draw_limits = true
+script = ExtResource("4_qy33o")
+player = NodePath("../Player")
+
+[node name="TileMapDark" type="TileMap" parent="."]
+z_as_relative = false
+tile_set = ExtResource("5_wgnds")
+format = 2
+layer_0/name = "WALL"
+layer_0/z_index = -5
+layer_0/tile_data = PackedInt32Array(65486, 4, 0, 131022, 4, 0, 196558, 4, 0, 262094, 4, 0, 327630, 4, 0, 393166, 4, 0, 458702, 4, 0, 524238, 4, 0, 589774, 4, 0, 655310, 4, 0, 720846, 4, 0, 65487, 4, 0, 131023, 4, 0, 196559, 4, 0, 262095, 4, 0, 327631, 4, 0, 393167, 4, 0, 458703, 4, 0, 524239, 4, 0, 589775, 4, 0, 655311, 4, 0, 720847, 4, 0, 65488, 4, 0, 131024, 4, 0, 196560, 4, 0, 262096, 4, 0, 327632, 4, 0, 393168, 4, 0, 458704, 4, 0, 524240, 4, 0, 589776, 4, 0, 655312, 4, 0, 720848, 4, 0, 65489, 4, 0, 131025, 4, 0, 196561, 4, 0, 262097, 4, 0, 327633, 4, 0, 393169, 4, 0, 458705, 4, 0, 524241, 4, 0, 589777, 4, 0, 655313, 4, 0, 720849, 4, 0, 65490, 4, 0, 131026, 4, 0, 196562, 4, 0, 262098, 4, 0, 327634, 4, 0, 393170, 4, 0, 458706, 4, 0, 524242, 4, 0, 589778, 4, 0, 655314, 4, 0, 720850, 4, 0, 65491, 4, 0, 131027, 4, 0, 196563, 4, 0, 262099, 4, 0, 327635, 4, 0, 393171, 4, 0, 458707, 4, 0, 524243, 4, 0, 589779, 4, 0, 655315, 4, 0, 720851, 4, 0, 65492, 4, 0, 131028, 4, 0, 196564, 4, 0, 262100, 4, 0, 327636, 4, 0, 393172, 4, 0, 458708, 4, 0, 524244, 4, 0, 589780, 4, 0, 655316, 4, 0, 720852, 4, 0, 65493, 4, 0, 131029, 4, 0, 196565, 4, 0, 262101, 4, 0, 327637, 4, 0, 393173, 4, 0, 458709, 4, 0, 524245, 4, 0, 589781, 4, 0, 655317, 4, 0, 720853, 4, 0, 65494, 327681, 1, 131030, 327681, 1, 196566, 327681, 0, 262102, 327681, 0, 327638, 327681, 1, 393174, 327681, 1, 458710, 327681, 1, 524246, 327681, 1, 589782, 4, 0, 655318, 4, 0, 720854, 4, 0, 589783, 4, 0, 655319, 4, 0, 720855, 4, 0, 589784, 4, 0, 655320, 4, 0, 720856, 4, 0, 589785, 4, 0, 655321, 4, 0, 720857, 4, 0, 655322, 4, 0, 720858, 4, 0, 720859, 4, 0, 720860, 4, 0, 589789, 4, 0, 655325, 4, 0, 720861, 4, 0, 589790, 4, 0, 655326, 4, 0, 720862, 4, 0, 720863, 4, 0, 720864, 4, 0, 589793, 4, 0, 655329, 4, 0, 720865, 4, 0, 589794, 4, 0, 655330, 4, 0, 720866, 4, 0, 589795, 4, 0, 655331, 4, 0, 720867, 4, 0, 589796, 4, 0, 655332, 4, 0, 720868, 4, 0, 589797, 4, 0, 655333, 4, 0, 720869, 4, 0, 589798, 4, 0, 655334, 4, 0, 720870, 4, 0, 589799, 4, 0, 655335, 4, 0, 720871, 4, 0, 589800, 4, 0, 655336, 4, 0, 720872, 4, 0, 589801, 4, 0, 655337, 4, 0, 720873, 4, 0, 589802, 4, 0, 655338, 4, 0, 720874, 4, 0, 655339, 4, 0, 720875, 4, 0, 655340, 4, 0, 720876, 4, 0, 589805, 4, 0, 655341, 4, 0, 720877, 4, 0, 720878, 4, 0, 720879, 4, 0, 589808, 4, 0, 655344, 4, 0, 720880, 4, 0, 589809, 4, 0, 655345, 4, 0, 720881, 4, 0, 720882, 4, 0, 720883, 4, 0, 589812, 4, 0, 655348, 4, 0, 720884, 4, 0, 589813, 4, 0, 655349, 4, 0, 720885, 4, 0, 589814, 4, 0, 655350, 4, 0, 720886, 4, 0, 720887, 4, 0, 720888, 4, 0, 589817, 4, 0, 655353, 4, 0, 720889, 4, 0, 589818, 4, 0, 655354, 4, 0, 720890, 4, 0, 589819, 4, 0, 655355, 4, 0, 720891, 4, 0, 720892, 4, 0, 720893, 4, 0, 589822, 4, 0, 655358, 4, 0, 720894, 4, 0, 589823, 4, 0, 655359, 4, 0, 720895, 4, 0, 524288, 4, 0, 589824, 4, 0, 655360, 4, 0, 524289, 4, 0, 589825, 4, 0, 655361, 4, 0, 524290, 4, 0, 589826, 4, 0, 655362, 4, 0, 524291, 4, 0, 589827, 4, 0, 655363, 4, 0, 524292, 4, 0, 589828, 4, 0, 655364, 4, 0, 524293, 4, 0, 589829, 4, 0, 655365, 4, 0, 524294, 4, 0, 589830, 4, 0, 655366, 4, 0, 524295, 4, 0, 589831, 4, 0, 655367, 4, 0, 524296, 4, 0, 589832, 4, 0, 655368, 4, 0, 9, 262145, 1, 65545, 262145, 1, 131081, 262145, 0, 196617, 262145, 0, 262153, 262145, 1, 327689, 262145, 1, 393225, 262145, 1, 458761, 262145, 0, 524297, 4, 0, 589833, 4, 0, 655369, 4, 0, 10, 4, 0, 65546, 4, 0, 131082, 4, 0, 196618, 4, 0, 262154, 4, 0, 327690, 4, 0, 393226, 4, 0, 458762, 4, 0, 524298, 4, 0, 589834, 4, 0, 655370, 4, 0, 11, 4, 0, 65547, 4, 0, 131083, 4, 0, 196619, 4, 0, 262155, 4, 0, 327691, 4, 0, 393227, 4, 0, 458763, 4, 0, 524299, 4, 0, 589835, 4, 0, 655371, 4, 0, 12, 4, 0, 65548, 4, 0, 131084, 4, 0, 196620, 4, 0, 262156, 4, 0, 327692, 4, 0, 393228, 4, 0, 458764, 4, 0, 524300, 4, 0, 589836, 4, 0, 655372, 4, 0, 13, 4, 0, 65549, 4, 0, 131085, 4, 0, 196621, 4, 0, 262157, 4, 0, 327693, 4, 0, 393229, 4, 0, 458765, 4, 0, 524301, 4, 0, 589837, 4, 0, 655373, 4, 0, 14, 4, 0, 65550, 4, 0, 131086, 4, 0, 196622, 4, 0, 262158, 4, 0, 327694, 4, 0, 393230, 4, 0, 458766, 4, 0, 524302, 4, 0, 589838, 4, 0, 655374, 4, 0, 15, 4, 0, 65551, 4, 0, 131087, 4, 0, 196623, 4, 0, 262159, 4, 0, 327695, 4, 0, 393231, 4, 0, 458767, 4, 0, 524303, 4, 0, 589839, 4, 0, 655375, 4, 0, 16, 4, 0, 65552, 4, 0, 131088, 4, 0, 196624, 4, 0, 262160, 4, 0, 327696, 4, 0, 393232, 4, 0, 458768, 4, 0, 524304, 4, 0, 589840, 4, 0, 655376, 4, 0, 17, 4, 0, 65553, 4, 0, 131089, 4, 0, 196625, 4, 0, 262161, 4, 0, 327697, 4, 0, 393233, 4, 0, 458769, 4, 0, 524305, 4, 0, 589841, 4, 0, 655377, 4, 0, 458736, 262147, 0, 524272, 262147, 1, 458737, 327683, 0, 524273, 327683, 1, 458717, 262147, 0, 524253, 262147, 1, 458718, 327683, 0, 524254, 327683, 1, 458750, 262147, 0, 524286, 262147, 1, 458751, 327683, 0, 524287, 327683, 1, 327678, 262147, 0, 393214, 262147, 1, 327679, 327683, 0, 393215, 327683, 1, 196606, 262147, 0, 262142, 262147, 1, 196607, 327683, 0, 262143, 327683, 1, 65534, 262147, 0, 131070, 262147, 1, 65535, 327683, 0, 131071, 327683, 1, 458743, 262147, 0, 524279, 262147, 1, 458744, 327683, 0, 524280, 327683, 1, 65515, 262147, 0, 131051, 262147, 1, 196587, 262147, 0, 262123, 262147, 1, 327659, 262147, 0, 393195, 262147, 1, 458731, 262147, 0, 524267, 262147, 1, 589803, 4, 0, 65516, 327683, 0, 131052, 327683, 1, 196588, 327683, 0, 262124, 327683, 1, 327660, 327683, 0, 393196, 327683, 1, 458732, 327683, 0, 524268, 327683, 1, 589804, 4, 0, 589786, 4, 0, 655323, 4, 0, 655324, 4, 0, 589787, 4, 0, 589788, 4, 0, 589815, 262147, 0, 655351, 262147, 1, 589816, 327683, 0, 655352, 327683, 1)
+layer_1/name = "OBJECTS"
+layer_1/z_index = -2
+layer_1/tile_data = PackedInt32Array(458725, 262150, 0, 524261, 262150, 1, 458726, 327686, 0, 524262, 327686, 1, 458729, 262150, 0, 524265, 262150, 1, 458730, 327686, 0, 524266, 327686, 1, 458745, 262150, 0, 524281, 262150, 1, 458746, 327686, 0, 524282, 327686, 1, 393224, 262150, 0, 458760, 262150, 1, 393225, 327686, 0, 458761, 327686, 1)
+layer_2/name = "PLATFORMS"
+layer_2/z_index = 1
+layer_2/tile_data = PackedInt32Array(393207, 262151, 1, 393208, 327687, 1, 393212, 262151, 1, 393213, 327687, 1, 393202, 262151, 1, 393203, 327687, 1, 393200, 262151, 1, 393201, 327687, 1, 393198, 262151, 1, 393199, 327687, 1, 262119, 262151, 1, 262120, 327687, 1, 262115, 262151, 1, 262116, 327687, 1, 393181, 262151, 1, 393182, 327687, 1, 393175, 262151, 1, 393176, 327687, 1, 262142, 9, 0, 262143, 65545, 0, 262133, 9, 0, 262134, 65545, 0, 262123, 9, 0, 262124, 65545, 0, 262113, 9, 0, 262114, 65545, 0, 458711, 9, 0, 458712, 65545, 0)
+layer_3/name = "GROUND"
+layer_3/z_index = -4
+layer_3/tile_data = PackedInt32Array(524246, 262144, 1, 524247, 327680, 1, 524248, 327680, 1, 524249, 262144, 1, 524250, 262144, 1, 524251, 327680, 1, 524252, 262144, 1, 524253, 327680, 1, 524254, 327680, 1, 524257, 327680, 1, 524258, 327680, 1, 524259, 262144, 1, 524260, 327680, 1, 524261, 262144, 1, 524262, 262144, 1, 524263, 327680, 1, 524264, 327680, 1, 524265, 327680, 1, 524266, 262144, 1, 524267, 262144, 1, 524268, 327680, 1, 524269, 262144, 1, 524272, 327680, 1, 524273, 327680, 1, 524276, 262144, 1, 524277, 327680, 1, 524278, 262144, 1, 524281, 327680, 1, 524282, 262144, 1, 524283, 262144, 1, 524286, 262144, 1, 524287, 262144, 1, 458752, 262144, 1, 458753, 327680, 1, 458754, 262144, 1, 458755, 327680, 1, 458756, 327680, 1, 458757, 262144, 1, 458758, 327680, 1, 458759, 327680, 1, 458760, 327680, 1, 458761, 327680, 1)
+layer_4/name = "LANDMARK"
+layer_4/z_index = -1
+layer_4/tile_data = PackedInt32Array(393219, 10, 8, 458755, 10, 9, 393220, 65546, 8, 458756, 65546, 9, 393221, 131082, 8, 458757, 131082, 9, 458714, 10, 6, 524250, 10, 7, 458715, 65546, 6, 524251, 65546, 7, 458716, 131082, 6, 524252, 131082, 7, 458740, 10, 6, 524276, 10, 7, 458741, 65546, 6, 524277, 65546, 7, 458742, 131082, 6, 524278, 131082, 7, 393216, 10, 6, 458752, 10, 7, 393217, 65546, 6, 458753, 65546, 7, 393218, 131082, 6, 458754, 131082, 7)
+layer_5/name = "PRIMEIRO PLANO"
+layer_5/z_index = 2
+layer_5/tile_data = PackedInt32Array(458711, 262147, 0, 524247, 262147, 1, 458712, 327683, 0, 524248, 327683, 1, 458721, 262147, 0, 524257, 262147, 1, 458722, 327683, 0, 524258, 327683, 1, 327649, 262147, 0, 393185, 262147, 1, 327650, 327683, 0, 393186, 327683, 1, 196577, 262147, 0, 262113, 262147, 1, 196578, 327683, 0, 262114, 327683, 1, 65505, 262147, 0, 131041, 262147, 1, 65506, 327683, 0, 131042, 327683, 1, 327651, 262147, 0, 393187, 262147, 1, 327652, 327683, 0, 393188, 327683, 1, 458723, 262147, 0, 524259, 262147, 1, 458724, 327683, 0, 524260, 327683, 1, 458727, 262147, 0, 524263, 262147, 1, 458728, 327683, 0, 524264, 327683, 1, 327655, 262147, 0, 393191, 262147, 1, 327656, 327683, 0, 393192, 327683, 1, 458734, 262147, 0, 524270, 262147, 1, 458735, 327683, 0, 524271, 327683, 1, 458738, 262147, 0, 524274, 262147, 1, 458739, 327683, 0, 524275, 327683, 1, 458748, 262147, 0, 524284, 262147, 1, 458749, 327683, 0, 524285, 327683, 1, 458741, 262147, 0, 524277, 262147, 1, 458742, 327683, 0, 524278, 327683, 1, 327669, 262147, 0, 393205, 262147, 1, 327670, 327683, 0, 393206, 327683, 1, 196597, 262147, 0, 262133, 262147, 1, 196598, 327683, 0, 262134, 327683, 1, 65525, 262147, 0, 131061, 262147, 1, 65526, 327683, 0, 131062, 327683, 1, 589820, 262147, 0, 655356, 262147, 1, 589821, 327683, 0, 655357, 327683, 1, 589810, 262147, 0, 655346, 262147, 1, 589811, 327683, 0, 655347, 327683, 1, 589806, 262147, 0, 655342, 262147, 1, 589807, 327683, 0, 655343, 327683, 1)
+
+[node name="TileMapLight" type="TileMap" parent="."]
+z_as_relative = false
+material = SubResource("CanvasItemMaterial_nld3r")
+tile_set = ExtResource("5_wgnds")
+format = 2
+layer_0/name = "WALL"
+layer_0/z_index = -5
+layer_0/tile_data = PackedInt32Array(65494, 458755, 0, 131030, 458755, 1, 196566, 458755, 0, 262102, 458755, 0, 327638, 458755, 1, 393174, 458755, 1, 458710, 458755, 0, 524246, 458755, 1, 9, 393219, 0, 65545, 393219, 1, 131081, 393219, 1, 196617, 393219, 0, 262153, 393219, 0, 327689, 393219, 0, 393225, 393219, 1, 458761, 393219, 1, 458717, 393219, 0, 524253, 393219, 1, 458718, 458755, 0, 524254, 458755, 1, 65515, 393219, 0, 131051, 393219, 1, 65516, 458755, 0, 131052, 458755, 1, 196587, 393219, 0, 262123, 393219, 1, 196588, 458755, 0, 262124, 458755, 1, 327659, 393219, 0, 393195, 393219, 1, 327660, 458755, 0, 393196, 458755, 1, 458731, 393219, 0, 524267, 393219, 1, 458732, 458755, 0, 524268, 458755, 1, 458736, 393219, 0, 524272, 393219, 1, 458737, 458755, 0, 524273, 458755, 1, 458743, 393219, 0, 524279, 393219, 1, 458744, 458755, 0, 524280, 458755, 1, 458750, 393219, 0, 524286, 393219, 1, 458751, 458755, 0, 524287, 458755, 1, 327678, 393219, 0, 393214, 393219, 1, 327679, 458755, 0, 393215, 458755, 1, 196606, 393219, 0, 262142, 393219, 1, 196607, 458755, 0, 262143, 458755, 1, 65534, 393219, 0, 131070, 393219, 1, 65535, 458755, 0, 131071, 458755, 1, 589815, 393219, 0, 655351, 393219, 1, 589816, 458755, 0, 655352, 458755, 1)
+layer_1/name = "OBJECTS"
+layer_1/z_index = -2
+layer_1/tile_data = PackedInt32Array(458711, 393219, 0, 524247, 393219, 1, 458715, 262154, 6, 524251, 262154, 7, 458716, 327690, 6, 524252, 327690, 7, 458725, 393222, 0, 524261, 393222, 1, 458726, 458758, 0, 524262, 458758, 1, 458729, 393222, 0, 524265, 393222, 1, 458730, 458758, 0, 524266, 458758, 1, 458745, 393222, 0, 524281, 393222, 1, 458746, 458758, 0, 524282, 458758, 1, 393224, 393222, 0, 458760, 393222, 1, 393225, 458758, 0, 458761, 458758, 1, 458712, 458755, 0, 524248, 458755, 1, 458714, 196618, 6, 524250, 196618, 7)
+layer_2/name = "PLATFORMS"
+layer_2/z_index = 1
+layer_2/tile_data = PackedInt32Array(393212, 393223, 1, 393213, 458759, 1, 393207, 393223, 1, 393208, 458759, 1, 393202, 393223, 1, 393203, 458759, 1, 393200, 393223, 1, 393201, 458759, 1, 393198, 393223, 1, 393199, 458759, 1, 262119, 393223, 1, 262120, 458759, 1, 262115, 393223, 1, 262116, 458759, 1, 393181, 393223, 1, 393182, 458759, 1, 393175, 393223, 1, 393176, 458759, 1)
+layer_3/name = "GROUND"
+layer_3/z_index = -4
+layer_3/tile_data = PackedInt32Array(524246, 393216, 1, 524247, 458752, 1, 524248, 393216, 1, 524249, 393216, 1, 524250, 393216, 1, 524251, 393216, 1, 524252, 393216, 1, 524253, 458752, 1, 524254, 393216, 1, 524257, 458752, 1, 524258, 458752, 1, 524259, 393216, 1, 524260, 393216, 1, 524261, 458752, 1, 524262, 458752, 1, 524263, 393216, 1, 524264, 458752, 1, 524265, 458752, 1, 524266, 393216, 1, 524267, 458752, 1, 524268, 393216, 1, 524269, 393216, 1, 524272, 393216, 1, 524273, 393216, 1, 524276, 393216, 1, 524277, 458752, 1, 524278, 458752, 1, 524281, 458752, 1, 524282, 393216, 1, 524283, 458752, 1, 524286, 393216, 1, 524287, 393216, 1, 458752, 458752, 1, 458753, 458752, 1, 458754, 458752, 1, 458755, 393216, 1, 458756, 393216, 1, 458757, 458752, 1, 458758, 393216, 1, 458759, 393216, 1, 458760, 393216, 1, 458761, 458752, 1)
+layer_4/name = "LANDMARK"
+layer_4/z_index = -1
+layer_4/tile_data = PackedInt32Array(393219, 196618, 8, 458755, 196618, 9, 393220, 262154, 8, 458756, 262154, 9, 393221, 327690, 8, 458757, 327690, 9, 458714, 196618, 6, 524250, 196618, 7, 458715, 262154, 6, 524251, 262154, 7, 458716, 327690, 6, 524252, 327690, 7, 458740, 196618, 6, 524276, 196618, 7, 458741, 262154, 6, 524277, 262154, 7, 458742, 327690, 6, 524278, 327690, 7, 393216, 196618, 6, 458752, 196618, 7, 393217, 262154, 6, 458753, 262154, 7, 393218, 327690, 6, 458754, 327690, 7)
+layer_5/name = "PRIMEIRO PLANO"
+layer_5/z_index = 2
+layer_5/tile_data = PackedInt32Array(458711, 393219, 0, 524247, 393219, 1, 458712, 458755, 0, 524248, 458755, 1, 458721, 393219, 0, 524257, 393219, 1, 458722, 458755, 0, 524258, 458755, 1, 327649, 393219, 0, 393185, 393219, 1, 327650, 458755, 0, 393186, 458755, 1, 196577, 393219, 0, 196578, 458755, 0, 65505, 393219, 0, 131041, 393219, 1, 65506, 458755, 0, 131042, 458755, 1, 327651, 393219, 0, 393187, 393219, 1, 327652, 458755, 0, 393188, 458755, 1, 458723, 393219, 0, 524259, 393219, 1, 458724, 458755, 0, 524260, 458755, 1, 458727, 393219, 0, 524263, 393219, 1, 458728, 458755, 0, 524264, 458755, 1, 327655, 393219, 0, 393191, 393219, 1, 327656, 458755, 0, 393192, 458755, 1, 458734, 393219, 0, 524270, 393219, 1, 458735, 458755, 0, 524271, 458755, 1, 458738, 393219, 0, 524274, 393219, 1, 458739, 458755, 0, 524275, 458755, 1, 458741, 393219, 0, 524277, 393219, 1, 458742, 458755, 0, 524278, 458755, 1, 327669, 393219, 0, 393205, 393219, 1, 327670, 458755, 0, 393206, 458755, 1, 196597, 393219, 0, 262133, 393219, 1, 196598, 458755, 0, 65525, 393219, 0, 131061, 393219, 1, 65526, 458755, 0, 131062, 458755, 1, 458748, 393219, 0, 524284, 393219, 1, 458749, 458755, 0, 524285, 458755, 1, 262134, 458755, 1, 262113, 393219, 1, 262114, 458755, 1, 589820, 393219, 0, 655356, 393219, 1, 589821, 458755, 0, 655357, 458755, 1)
+
+[node name="Flashlight" type="PointLight2D" parent="."]
+position = Vector2(-159, 53)
+rotation = 1.5708
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("10_lyof1")
+offset = Vector2(103, -11)
+
+[node name="Flashlight2" type="PointLight2D" parent="."]
+position = Vector2(-15, 52)
+rotation = 1.5708
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("10_lyof1")
+offset = Vector2(103, -11)
+
+[node name="Flashlight3" type="PointLight2D" parent="."]
+position = Vector2(-320, 52)
+rotation = 1.5708
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("10_lyof1")
+offset = Vector2(103, -11)
+
+[node name="Flashlight4" type="PointLight2D" parent="."]
+position = Vector2(-480, 52)
+rotation = 1.5708
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("10_lyof1")
+offset = Vector2(103, -11)
+
+[node name="Flashlight5" type="PointLight2D" parent="."]
+position = Vector2(-640, 101)
+rotation = 1.5708
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("10_lyof1")
+offset = Vector2(103, -11)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("7_h8jw1")
+
+[node name="McGuffins" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(10, 9)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_iky40")
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 20.0
+offset_top = 1.5
+offset_right = 46.0
+offset_bottom = 18.5
+theme_override_colors/font_color = Color(0.607843, 0.737255, 0.0588235, 1)
+theme_override_fonts/font = ExtResource("9_vqke6")
+theme_override_font_sizes/font_size = 13
+text = "x5"
+
+[node name="Batteries1" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(118, 9)
+sprite_frames = SubResource("SpriteFrames_ju1xw")
+animation = &"full"
+
+[node name="Batteries2" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(128, 9)
+sprite_frames = SubResource("SpriteFrames_ju1xw")
+animation = &"empty"
+
+[node name="Batteries3" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(138, 9)
+sprite_frames = SubResource("SpriteFrames_ju1xw")
+animation = &"empty"
+
+[node name="Batteries4" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(148, 9)
+sprite_frames = SubResource("SpriteFrames_ju1xw")
+animation = &"empty"
+
+[node name="BatteriesH" type="AnimatedSprite2D" parent="CanvasLayer"]
+position = Vector2(155, 9)
+sprite_frames = SubResource("SpriteFrames_ju1xw")
+animation = &"cap"
+
+[node name="McGuffin" parent="." instance=ExtResource("10_6a4ts")]
+position = Vector2(-631, 118)
+
+[node name="Battery" parent="." instance=ExtResource("11_8flnu")]
+position = Vector2(-240, 117)
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_qhb8i")
+volume_db = -18.0
+autoplay = true
+
+[node name="MusicMonster" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_51q3f")
+volume_db = -60.0
+autoplay = true
+
+[node name="Button_U" parent="." instance=ExtResource("15_umoe2")]
+position = Vector2(73, 91)
+
+[node name="Teleport" parent="." instance=ExtResource("16_uclt2")]
+position = Vector2(74, 117)
+target = "Main"
+
+[node name="Monster" parent="." node_paths=PackedStringArray("player") instance=ExtResource("17_1lik8")]
+position = Vector2(-304, 108)
+player = NodePath("../Player")
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("18_hc5l7")
+
+[node name="Area2D" type="Area2D" parent="Node"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node/Area2D"]
+position = Vector2(-246, 213)
+shape = SubResource("RectangleShape2D_7pmwf")
+
+[node name="Water" type="Node" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(172, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.415874
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(156, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(140, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(124, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(108, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D6" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(92, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D7" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(76, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D8" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(60, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D9" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(44, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.702657
+
+[node name="AnimatedSprite2D10" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(28, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D11" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(12, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D12" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-4, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D13" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-20, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D14" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-36, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D15" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-52, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D16" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-68, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D17" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-84, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.98293
+
+[node name="AnimatedSprite2D18" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-100, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D19" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-116, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D20" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-132, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D21" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-148, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D22" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-164, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D23" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-180, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D24" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-196, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D25" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-212, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.702657
+
+[node name="AnimatedSprite2D26" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-228, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D27" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-244, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D28" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-260, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D29" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-276, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D30" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-292, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D31" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-308, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D32" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-324, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D33" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-340, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.98293
+
+[node name="AnimatedSprite2D34" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-356, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D35" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-372, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D36" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-388, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D37" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-404, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D38" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-420, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D39" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-436, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D40" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-452, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D41" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-468, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.702657
+
+[node name="AnimatedSprite2D42" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-484, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D43" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-500, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D44" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-516, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D45" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-532, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D46" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-548, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D47" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-564, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D48" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-580, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D49" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-596, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D50" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-612, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.114666
+
+[node name="AnimatedSprite2D51" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-628, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D52" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-644, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D53" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-660, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D54" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-676, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[node name="AnimatedSprite2D55" type="AnimatedSprite2D" parent="Water"]
+position = Vector2(-692, 142)
+sprite_frames = SubResource("SpriteFrames_gwo8d")
+autoplay = "default"
+frame_progress = 0.492114
+
+[connection signal="body_entered" from="Node/Area2D" to="Node" method="_on_area_2d_body_entered"]

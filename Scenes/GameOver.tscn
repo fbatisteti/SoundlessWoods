@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://nasr8go1vca"]
+
+[ext_resource type="Script" path="res://Scripts/GameOver_Controller.gd" id="1_e5pl6"]
+[ext_resource type="Texture2D" uid="uid://iqtib8w4phn3" path="res://Assets/Sprites/gameover (2).png" id="2_hv6xt"]
+[ext_resource type="Texture2D" uid="uid://usxqwutd865b" path="res://Assets/Sprites/TilemapColor.png" id="2_pqb5j"]
+[ext_resource type="AudioStream" uid="uid://dlw66rupun721" path="res://Assets/Music/death.mp3" id="4_1g11a"]
+[ext_resource type="AudioStream" uid="uid://cc7l6ssguhqgl" path="res://Assets/Music/laugh.mp3" id="5_lgadx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f8nt2"]
+atlas = ExtResource("2_pqb5j")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rxuln"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f8nt2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="GameOver" type="Node2D"]
+script = ExtResource("1_e5pl6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(80, 72)
+texture = ExtResource("2_hv6xt")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(80, 72.5)
+scale = Vector2(10.375, 9.4375)
+sprite_frames = SubResource("SpriteFrames_rxuln")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="Slash" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_1g11a")
+volume_db = -10.0
+autoplay = true
+
+[node name="Laugh" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_lgadx")
+volume_db = -5.0
+
+[node name="TimerLaugh" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="finished" from="Slash" to="." method="_on_slash_finished"]
+[connection signal="timeout" from="TimerLaugh" to="." method="_on_timer_laugh_timeout"]

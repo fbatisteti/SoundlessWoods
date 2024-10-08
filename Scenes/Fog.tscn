@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://d4dk8xjesqjam"]
+
+[ext_resource type="Script" path="res://Scripts/Fog_Controller.gd" id="1_4mmmr"]
+[ext_resource type="Texture2D" uid="uid://iesslkdqiyni" path="res://Assets/Sprites/fogB.png" id="1_no6jq"]
+[ext_resource type="Script" path="res://Scripts/FogSway_Controller.gd" id="3_ksagk"]
+[ext_resource type="Texture2D" uid="uid://dr7w0855thwxs" path="res://Assets/Sprites/FogCamo (1).png" id="4_0xrsp"]
+[ext_resource type="Texture2D" uid="uid://gyrw6sl8fm13" path="res://Assets/Sprites/FogCamo.png" id="5_mkcf3"]
+
+[node name="Fog" type="Node2D"]
+z_index = -5
+z_as_relative = false
+script = ExtResource("1_4mmmr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -5
+z_as_relative = false
+texture = ExtResource("1_no6jq")
+script = ExtResource("3_ksagk")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+z_index = -5
+z_as_relative = false
+position = Vector2(0, 18.65)
+texture = ExtResource("4_0xrsp")
+script = ExtResource("3_ksagk")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+z_index = -5
+z_as_relative = false
+position = Vector2(0, 22.875)
+texture = ExtResource("5_mkcf3")
+script = ExtResource("3_ksagk")

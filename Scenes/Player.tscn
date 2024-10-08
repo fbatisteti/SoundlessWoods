@@ -1,0 +1,119 @@
+[gd_scene load_steps=14 format=3 uid="uid://ca8xqjo881bvp"]
+
+[ext_resource type="Script" path="res://Scripts/Player_Controller.gd" id="1_0673e"]
+[ext_resource type="Texture2D" uid="uid://c4tjrar44xg13" path="res://Assets/Sprites/MC.png" id="2_kb308"]
+[ext_resource type="Texture2D" uid="uid://b2a3kudttjpre" path="res://Assets/Sprites/FlashlightUser.png" id="3_0tytb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vjvj6"]
+atlas = ExtResource("2_kb308")
+region = Rect2(0, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydyic"]
+atlas = ExtResource("2_kb308")
+region = Rect2(0, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kt4n"]
+atlas = ExtResource("2_kb308")
+region = Rect2(18, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k7cbb"]
+atlas = ExtResource("2_kb308")
+region = Rect2(36, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0gjj"]
+atlas = ExtResource("2_kb308")
+region = Rect2(54, 0, 18, 19)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3icxy"]
+atlas = ExtResource("2_kb308")
+region = Rect2(72, 0, 18, 19)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wb6qh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vjvj6")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ydyic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4kt4n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k7cbb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g0gjj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3icxy")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p2tqu"]
+size = Vector2(11, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_20hsw"]
+radius = 89.0056
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w50bi"]
+size = Vector2(50, 39)
+
+[node name="Player" type="CharacterBody2D"]
+z_as_relative = false
+collision_mask = 7
+script = ExtResource("1_0673e")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wb6qh")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.5, 0)
+shape = SubResource("RectangleShape2D_p2tqu")
+
+[node name="Flashlight" type="PointLight2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(1, 0.989583)
+enabled = false
+blend_mode = 2
+shadow_enabled = true
+texture = ExtResource("3_0tytb")
+offset = Vector2(102, 0)
+
+[node name="AlertArea" type="Area2D" parent="."]
+visible = false
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AlertArea"]
+shape = SubResource("CircleShape2D_20hsw")
+debug_color = Color(0.392936, 0.61049, 1.92523e-07, 0.42)
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="FlickerTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Music" type="Area2D" parent="."]
+visible = false
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Music"]
+position = Vector2(29, 0)
+shape = SubResource("RectangleShape2D_w50bi")
+
+[connection signal="body_entered" from="AlertArea" to="." method="_on_alert_area_body_entered"]
+[connection signal="body_exited" from="AlertArea" to="." method="_on_alert_area_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="FlickerTimer" to="." method="_on_flicker_timer_timeout"]
+[connection signal="body_entered" from="Music" to="." method="_on_music_body_entered"]
